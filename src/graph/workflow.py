@@ -1,10 +1,10 @@
 from langgraph.graph import StateGraph, END
 from langgraph.graph.state import CompiledStateGraph
 
-from agents.evaluation_agent import evaluation_agent_node
-from agents.github_analyzer import github_agent_node
-from agents.jd_analyzer import jd_agent_node
-from graph.state import AppState
+from src.agents.evaluation_agent import evaluation_agent_node
+from src.agents.github_analyzer import github_agent_node
+from src.agents.jd_analyzer import jd_agent_node
+from src.graph.state import AppState
 
 # ===================
 # Build Graph

@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 
 # ===================
@@ -7,7 +8,7 @@ from pydantic import BaseModel
 class AppState(BaseModel):
     github_username: str = ''
     jd_path: str =''
-    jd_skills: dict = {}
-    gh_analysis: dict = {}
+    jd_skills: List[str] = []
+    gh_analysis: List = []
     score: float = 0.0
     report: str = ''

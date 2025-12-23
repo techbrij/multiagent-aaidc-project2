@@ -7,13 +7,13 @@ GitHub Profile Evaluator
 
 import os
 
-from graph.workflow import run_workflow
+from src.graph.workflow import run_workflow
 
 def main():
     print("=== JD vs GitHub Profile Evaluator ===")
 
-    github_username = input("Enter GitHub username: ")
-    # github_username = ''
+    # github_username = input("Enter GitHub username: ")
+    github_username = 'techbrij'
     
     jd_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'job-description.txt')
     
