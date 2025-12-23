@@ -1,0 +1,86 @@
+## Job Title
+
+**Senior AI / Python Engineer**
+
+## Experience
+
+6–10+ years (with strong hands-on AI/ML experience)
+
+## Location
+
+Remote / Hybrid / On-site
+
+---
+
+## Role Overview
+
+We are looking for a **Senior AI + Python Engineer** to design, build, and scale intelligent systems using modern AI/ML and Generative AI techniques. You will work on real-world problems involving data pipelines, model integration, RAG systems, and agent-based architectures, and help take AI solutions from prototype to production.
+
+This role requires strong **Python engineering fundamentals** along with **practical AI/ML and LLM experience**.
+
+---
+
+## Key Responsibilities
+
+* Design, develop, and maintain **AI-driven applications** using Python
+* Build and optimize **machine learning and deep learning pipelines**
+* Develop **Generative AI solutions** using LLMs (OpenAI, Gemini, LLaMA, etc.)
+* Implement **RAG (Retrieval-Augmented Generation)** systems using vector databases
+* Design and orchestrate **multi-agent / agentic AI workflows** (LangChain, LangGraph, CrewAI, etc.)
+* Integrate AI services with **REST APIs, databases, and cloud platforms**
+* Handle **data ingestion, preprocessing, embeddings, and evaluation**
+* Ensure **scalability, reliability, and observability** of AI systems
+* Collaborate with product, data, and backend teams on AI features
+* Mentor junior engineers and contribute to technical decisions
+
+---
+
+## Required Skills
+
+### Core
+
+* Strong proficiency in **Python** (OOP, async, performance optimization)
+* Solid understanding of **Data Structures, Algorithms, and system design**
+* Experience with **ML frameworks**: PyTorch, TensorFlow, or scikit-learn
+
+### AI / GenAI
+
+* Hands-on experience with **LLMs and GenAI applications**
+* Experience building **RAG pipelines**
+* Knowledge of **prompt engineering, embeddings, chunking strategies**
+* Familiarity with **vector databases** (ChromaDB, FAISS, Pinecone, Weaviate, etc.)
+
+### Agentic & Tooling
+
+* Experience with **LangChain / LangGraph / agent frameworks**
+* Tool calling, function calling, and workflow orchestration
+* Human-in-the-loop and evaluation strategies (preferred)
+
+### Backend & Infra
+
+* RESTful API development (FastAPI / Flask)
+* Databases: SQL / NoSQL
+* Docker & CI/CD
+* Cloud platforms (AWS / GCP / Azure) – practical exposure preferred
+
+---
+
+## Nice to Have
+
+* Experience with **MCP (Model Context Protocol)**
+* Experience deploying models at scale
+* Knowledge of **evaluation metrics for LLMs**
+* Experience in **AI security, hallucination mitigation, and safety**
+* Contributions to open-source or AI research projects
+
+---
+
+## What We Offer
+
+* Opportunity to work on **real, production-grade AI systems**
+* High ownership and technical autonomy
+* Competitive compensation
+* Learning budget for AI tools, courses, and conferences
+* Collaborative and engineering-driven culture
+
+---
