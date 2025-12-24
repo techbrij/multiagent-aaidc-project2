@@ -55,6 +55,7 @@ def analyze_github(username: str, jd_skills: List[str]) -> Dict:
                 "name": repo["name"],
                 "languages": [repo["language"]] if repo["language"] else [],
                 "stars": repo["stargazers_count"],
+                'has_issues': repo['open_issues_count'] > 0,
                 "last_commit": repo["pushed_at"],
                 "commit_count_1y": commits
             })

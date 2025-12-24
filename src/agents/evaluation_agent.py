@@ -18,13 +18,24 @@ def generate_score_and_report(jd_skills: Dict, gh_analysis: Dict) -> tuple[float
 
     skill_score = len(overlap) / len(jd_stack)    
 
-    total_commits = sum(r["commit_count_1y"] for r in gh_analysis)
+    total_relevant_repos = len(gh_analysis)
+    total_commits = 0
+    total_open_issues_repo = 0
+    total_starred_repo = 0
+
+    for repo in gh_analysis:
+        total_commits += repo["commit_count_1y"]
+        total_open_issues_repo += repo["has_issues"]
+        total_starred_repo += repo["stars"] > 0
+
     commit_score =  min(total_commits/EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR, 1.0)
 
-    overall_score = (skill_score + commit_score) / 2
+    advanced_score = (total_open_issues_repo + total_starred_repo)/(2* total_relevant_repos)
+
+    overall_score = skill_score * 0.5 + commit_score * 0.3 + advanced_score * 0.2
 
     lines = [
-         f"Found {len(gh_analysis)} relevant repositories. "
+         f"Found {total_relevant_repos} relevant repositories. "
         f"Tech stack match: {jd_stack} vs {gh_stack}",
         f"Active development with {total_commits} commits in last year. "
         f"Score: {overall_score:.2f}",
@@ -32,9 +43,9 @@ def generate_score_and_report(jd_skills: Dict, gh_analysis: Dict) -> tuple[float
         f"Candidate's open-source work matches {overall_score*100:.1f}% of the required tech stack.",
     ]
     if overall_score > 0.8:
-        lines.append("Excellent match. Strong signals of seniority and activity.")
+        lines.append("Excellent match.")
     elif overall_score > 0.5:
-        lines.append("Good match. Some seniority/activity signals present.")
+        lines.append("Good match.")
     else:
         lines.append("Partial match. Consider more relevant contributions or signals.")
     return (overall_score, '\n'.join(lines))
