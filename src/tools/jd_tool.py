@@ -25,7 +25,15 @@ def extract_skills(jd_text: str) -> Dict[str, List[str]]:
     for kw in tech_keywords:
         if f' {kw} ' in jd_text:
             found.append(kw)
-    return {'tech_stack': found}
+
+    total_found = len(found)
+    per_weight = 1/total_found
+    tech_stack =  [{
+            "language": lng,
+            "weight": per_weight,
+            "source": "manual"
+         } for lng in found]
+    return {'tech_stack': tech_stack}
 
 def analyze_jd(jd_path: str) -> Dict:
     jd_text = read_jd_file(jd_path)

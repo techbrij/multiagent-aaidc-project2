@@ -9,14 +9,19 @@ EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR = 15
 
 def generate_score_and_report(jd_skills: Dict, gh_analysis: Dict) -> tuple[float, str]:
 
-    jd_stack = set(jd_skills)
+    jd_stack = {skill.get('language').lower(): skill.get('weight') for skill in jd_skills}
     gh_stack = set(lang.lower() for repo in gh_analysis for lang in repo.get('languages', []))
     # Simple overlap score
     if not jd_stack:
         return 0.0
-    overlap = jd_stack & gh_stack
-
-    skill_score = len(overlap) / len(jd_stack)    
+    
+    skill_score = 0
+    matched_skills = []
+    for gh in gh_stack:
+        weight = jd_stack.get(gh, 0) 
+        if weight > 0:
+            skill_score += weight
+            matched_skills.append(gh)
 
     total_relevant_repos = len(gh_analysis)
     total_commits = 0
@@ -36,7 +41,7 @@ def generate_score_and_report(jd_skills: Dict, gh_analysis: Dict) -> tuple[float
 
     lines = [
          f"Found {total_relevant_repos} relevant repositories. "
-        f"Tech stack match: {jd_stack} vs {gh_stack}",
+        f"Tech stack match: {matched_skills}",
         f"Active development with {total_commits} commits in last year. "
         f"Score: {overall_score:.2f}",
         "\n--- Human-Readable Evaluation ---",

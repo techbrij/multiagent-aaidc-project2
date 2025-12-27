@@ -8,7 +8,7 @@ GITHUB_API = "https://api.github.com"
 
 # Helper to fetch user repos
 def fetch_repos(username: str) -> List[Dict]:
-    url = f"{GITHUB_API}/users/{username}/repos?per_page=100&type=owner&sort=updated"
+    url = f"{GITHUB_API}/users/{username}/repos?per_page=50&type=owner&sort=updated"
     resp = requests.get(url)
     resp.raise_for_status()
     return resp.json()
@@ -42,9 +42,9 @@ def analyze_github(username: str, jd_skills: List[str]) -> Dict:
     repos = fetch_repos(username)
     matched_repos = []
     cutoff = datetime.utcnow() - timedelta(days=365)  
-
+    skill_lngs = [skill["language"].lower() for skill in jd_skills]
     for repo in repos:
-        if repo_matches_jd(repo, jd_skills):
+        if repo_matches_jd(repo, skill_lngs):
             
             if datetime.strptime(repo['updated_at'], '%Y-%m-%dT%H:%M:%SZ') > cutoff:
                 commits = fetch_commit_count(username, repo["name"])
