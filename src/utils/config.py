@@ -18,3 +18,7 @@ def get_llm() -> BaseChatModel:
         )
     else:
         raise ValueError("Missing Groq Key")
+    
+
+def get_min_commits() -> int:
+    return os.getenv("EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR", 15)

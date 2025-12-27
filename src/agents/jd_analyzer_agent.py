@@ -1,11 +1,11 @@
 
 
 import json
-from typing import List
-from src.tools.jd_tool import analyze_jd
+from src.tools.file_reader_tool import read_jd_file
+from src.tools.static_jd_tool import static_analyze_jd
 from langchain_core.messages import SystemMessage, HumanMessage
 
-from src.utils.llm import get_llm
+from src.utils.config import get_llm
 
 SYSTEM_PROMPT_JD_EXTRACTOR = """
 You are a technical recruiter assistant specialized in analyzing software engineering job descriptions.
@@ -53,15 +53,12 @@ def llm_extract_lng_from_JD(jd_text: str) -> dict:
         raise
 
 
-
-
-
 def jd_agent_node(state):
     jd_path = state.jd_path
-    jd_analyze = analyze_jd(jd_path)    
-    jd_text = jd_analyze.get('jd_text')
-    result = llm_extract_lng_from_JD(jd_text)
+    jd_text = read_jd_file(jd_path)  
+
     try:
+        result = llm_extract_lng_from_JD(jd_text)
         json_result = json.loads(result)
         json_result = json_result.get('languages')
     except Exception as e:
@@ -69,6 +66,7 @@ def jd_agent_node(state):
         json_result = []
 
     state.jd_skills = json_result
-    if not json_result:        
+    if not json_result:
+        jd_analyze = static_analyze_jd(jd_text)           
         state.jd_skills = jd_analyze.get('tech_stack') or []
     return state

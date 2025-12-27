@@ -7,10 +7,6 @@ Agent: JD Analyzer
 
 from typing import Dict, List
 
-def read_jd_file(jd_path: str) -> str:
-    with open(jd_path, 'r', encoding='utf-8') as f:
-        return f.read()
-
 def extract_skills(jd_text: str) -> Dict[str, List[str]]:
 
     jd_text = jd_text.lower()
@@ -35,7 +31,6 @@ def extract_skills(jd_text: str) -> Dict[str, List[str]]:
          } for lng in found]
     return {'tech_stack': tech_stack}
 
-def analyze_jd(jd_path: str) -> Dict:
-    jd_text = read_jd_file(jd_path)
+def static_analyze_jd(jd_text: str) -> Dict:   
     skills = extract_skills(jd_text)
-    return {'jd_text': jd_text, **skills}
+    return {**skills}

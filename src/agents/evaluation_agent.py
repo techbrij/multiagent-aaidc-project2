@@ -3,46 +3,18 @@ Agent: Evaluation & Report
 - Compares JD and GitHub analysis
 - Scores match and generates a report
 """
-from typing import Dict
 
-EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR = 15
+from src.graph.state import AppState
+from src.tools.processing_tool import calculate_advanced_score, calculate_commit_score, calculate_overall_score, calculate_repo_match_score
 
-def generate_score_and_report(jd_skills: Dict, gh_analysis: Dict) -> tuple[float, str]:
 
-    jd_stack = {skill.get('language').lower(): skill.get('weight') for skill in jd_skills}
-    gh_stack = set(lang.lower() for repo in gh_analysis for lang in repo.get('languages', []))
-    # Simple overlap score
-    if not jd_stack:
-        return 0.0
+
+def generate_report(overall_score: float, matched_skills: str, total_relevant_repos: int, total_active_repos: int) -> str: 
     
-    skill_score = 0
-    matched_skills = []
-    for gh in gh_stack:
-        weight = jd_stack.get(gh, 0) 
-        if weight > 0:
-            skill_score += weight
-            matched_skills.append(gh)
-
-    total_relevant_repos = len(gh_analysis)
-    total_commits = 0
-    total_open_issues_repo = 0
-    total_starred_repo = 0
-
-    for repo in gh_analysis:
-        total_commits += repo["commit_count_1y"]
-        total_open_issues_repo += repo["has_issues"]
-        total_starred_repo += repo["stars"] > 0
-
-    commit_score =  min(total_commits/EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR, 1.0)
-
-    advanced_score = (total_open_issues_repo + total_starred_repo)/(2* total_relevant_repos)
-
-    overall_score = skill_score * 0.5 + commit_score * 0.3 + advanced_score * 0.2
-
     lines = [
          f"Found {total_relevant_repos} relevant repositories. "
         f"Tech stack match: {matched_skills}",
-        f"Active development with {total_commits} commits in last year. "
+        f"Active repositories {total_active_repos} in last year. "
         f"Score: {overall_score:.2f}",
         "\n--- Human-Readable Evaluation ---",
         f"Candidate's open-source work matches {overall_score*100:.1f}% of the required tech stack.",
@@ -53,13 +25,22 @@ def generate_score_and_report(jd_skills: Dict, gh_analysis: Dict) -> tuple[float
         lines.append("Good match.")
     else:
         lines.append("Partial match. Consider more relevant contributions or signals.")
-    return (overall_score, '\n'.join(lines))
+    return '\n'.join(lines)
 
 
-def evaluation_agent_node(state):
-    jd_skills = state.jd_skills
-    gh_analysis = state.gh_analysis
-    score, report = generate_score_and_report(jd_skills, gh_analysis)
-    state.score = score
+def evaluation_agent_node(state: AppState):
+    
+    skill_score, matched_skills = calculate_repo_match_score(state.jd_skills, state.repos_info)
+    commit_score = calculate_commit_score(state.commit_info)
+    advanced_score = calculate_advanced_score(state.repos_info)
+
+    overall_score = calculate_overall_score(skill_score, commit_score, advanced_score)
+
+    total_relevant_repos = len(state.repos_info)
+    total_active_repos = len(state.commit_info)
+
+    report = generate_report(overall_score, matched_skills, total_relevant_repos, total_active_repos)
+
+    state.score = overall_score
     state.report = report
     return state
