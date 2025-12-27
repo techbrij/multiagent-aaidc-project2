@@ -22,9 +22,11 @@ def extract_skills(jd_text: str) -> Dict[str, List[str]]:
 
     # Simple regex-based extraction for demo; can be replaced with NLP
     tech_keywords = [
-        'python', 'java', 'c\+\+', 'javascript', 'typescript', 'react', 'node', 'docker', 'kubernetes',
-        'aws', 'azure', 'gcp', 'sql', 'nosql', 'ml', 'ai', 'nlp', 'data', 'api', 'rest', 'graphql', 'linux',
-        'git', 'ci/cd', 'testing', 'unit test', 'integration test', 'agile', 'scrum', 'devops', 'microservices'
+        'python', 'javascript', 'typescript', 'java', 'c', 'c++', 'c#', 'go', 'rust', 'php',
+        'ruby', 'swift', 'kotlin', 'r', 'matlab', 'scala', 'dart', 'objective-c', 'shell', 'powershell',
+        'groovy', 'perl', 'lua', 'haskell', 'elixir', 'julia', 'fortran', 'assembly', 'cobol', 'scratch',
+        'solidity', 'vba', 'abap', 'bash', 'nim', 'crystal', 'ocaml', 'f#', 'smalltalk', 'apex',
+        'hack', 'pony', 'zig', 'vala', 'red', 'd', 'awk', 'idl', 'postscript'
     ]
     found = []
     for kw in tech_keywords:

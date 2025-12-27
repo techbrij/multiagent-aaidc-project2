@@ -3,23 +3,38 @@ from typing import Dict, List
 from src.graph.state import CommitInfo, JDLanguageInfo, MatchRepoInfo
 from src.utils.config import get_min_commits
 
-def is_repo_compatible_with_jd(repo: Dict, jd_skills: List[str]) -> bool:
+def normalize_language(lang: str) -> str:
+    if not lang:
+        return ""
+
+    lang = lang.lower().strip()
+
+    # normalize symbols & spaces
+    lang = lang.replace(" ", "")
+    lang = lang.replace("-", "")
+    lang = lang.replace("_", "")
+
+    return lang
+
+
+def is_repo_compatible_with_jd(repo: Dict, normalize_jd_skills: List[str]) -> bool:
     """
     Checks if a repository is compatible with the job description skills.
 
     Args:
         repo (Dict): Repository information dictionary.
-        jd_skills (List[str]): List of required skills from the job description.
+        normalize_jd_skills (List[str]): List of required skills from the job description in normalized format.
 
     Returns:
         bool: True if the repository matches any of the required skills, False otherwise.
     """
-    name = repo["name"].lower()
-    description = (repo["description"] or "").lower()
-    language = (repo["language"] or "").lower()
 
-    text = f"{name} {description} {language}"
-    return any(skill in text for skill in jd_skills)
+    repo_lang = normalize_language(repo.get("language", ""))
+
+    if not repo_lang:
+        return False
+    
+    return repo_lang in normalize_jd_skills
 
 
 

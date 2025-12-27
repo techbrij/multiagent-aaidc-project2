@@ -24,9 +24,9 @@ def generate_report(overall_score: float, matched_skills: str, total_relevant_re
     """   
 
     lines = [
-         f"Found {total_relevant_repos} relevant repositories. "
+         f"Found {total_relevant_repos} relevant repositories. ",
         f"Tech stack match: {matched_skills}",
-        f"Active repositories {total_active_repos} in last year. "
+        f"Active repositories {total_active_repos} in last year. ",
         f"Score: {overall_score:.2f}",
         "\n--- Human-Readable Evaluation ---",
         f"Candidate's open-source work matches {overall_score*100:.1f}% of the required tech stack.",

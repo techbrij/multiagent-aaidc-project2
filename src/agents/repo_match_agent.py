@@ -8,7 +8,7 @@ Agent: GitHub Profile Analyzer
 from typing import List
 from src.graph.state import JDLanguageInfo, MatchRepoInfo
 from src.tools.github_tool import fetch_repos
-from src.tools.processing_tool import is_repo_compatible_with_jd
+from src.tools.processing_tool import is_repo_compatible_with_jd, normalize_language
 
 
 def repo_match_agent_node(state):
@@ -27,7 +27,7 @@ def repo_match_agent_node(state):
     repos = fetch_repos(github_username)
 
     matched_repos: List[MatchRepoInfo] = []
-    skill_lngs = [skill.language.lower() for skill in jd_skills]
+    skill_lngs = {normalize_language(skill.language) for skill in jd_skills}
     for repo in repos:
         if is_repo_compatible_with_jd(repo, skill_lngs):
             repo = MatchRepoInfo(
