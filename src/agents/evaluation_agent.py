@@ -10,7 +10,19 @@ from src.tools.processing_tool import calculate_advanced_score, calculate_commit
 
 
 def generate_report(overall_score: float, matched_skills: str, total_relevant_repos: int, total_active_repos: int) -> str: 
-    
+    """
+    Generates a human-readable evaluation report based on the overall score and repository analysis.
+
+    Args:
+        overall_score (float): The overall match score between candidate and job description.
+        matched_skills (str): Description of matched skills.
+        total_relevant_repos (int): Number of relevant repositories found.
+        total_active_repos (int): Number of active repositories in the last year.
+
+    Returns:
+        str: A formatted evaluation report string.
+    """   
+
     lines = [
          f"Found {total_relevant_repos} relevant repositories. "
         f"Tech stack match: {matched_skills}",
@@ -29,6 +41,15 @@ def generate_report(overall_score: float, matched_skills: str, total_relevant_re
 
 
 def evaluation_agent_node(state: AppState):
+    """
+    Evaluates the candidate's GitHub public profile against the job description and updates the state with evaluation results.
+
+    Args:
+        state (AppState): The application state containing all relevant analysis data.
+
+    Returns:
+        Updates the state object in place with evaluation results and report.
+    """
     
     skill_score, matched_skills = calculate_repo_match_score(state.jd_skills, state.repos_info)
     commit_score = calculate_commit_score(state.commit_info)

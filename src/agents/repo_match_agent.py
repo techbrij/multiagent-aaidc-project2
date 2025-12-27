@@ -12,6 +12,15 @@ from src.tools.processing_tool import is_repo_compatible_with_jd
 
 
 def repo_match_agent_node(state):
+    """
+    Matches GitHub repositories to job description skills and updates the state with compatible repositories.
+
+    Args:
+        state: The application state object containing GitHub username and job description skills.
+
+    Returns:
+        Updates the state object in place with a list of matched repositories.
+    """
     github_username = state.github_username
     jd_skills: List[JDLanguageInfo] = state.jd_skills
 

@@ -38,6 +38,16 @@ Rules:
 
 def llm_extract_lng_from_JD(jd_text: str) -> dict:
 
+    """
+    Uses an LLM to extract programming languages from a job description.
+
+    Args:
+        jd_text (str): The job description text.
+
+    Returns:
+        dict: A dictionary containing extracted languages, weights, and confidence, following the specified JSON schema.
+    """
+
     user_prompt = f""" Job Description:
                     {jd_text}
                     """
@@ -54,6 +64,15 @@ def llm_extract_lng_from_JD(jd_text: str) -> dict:
 
 
 def jd_agent_node(state):
+    """
+    Orchestrates the job description analysis process and updates the state with extracted information.
+
+    Args:
+        state: The application state object containing the job description path and other context.
+
+    Returns:
+        Updates the state object in place with extracted job description information.
+    """
     jd_path = state.jd_path
     jd_text = read_jd_file(jd_path)  
 
@@ -67,6 +86,10 @@ def jd_agent_node(state):
 
     state.jd_skills = json_result
     if not json_result:
+        # ************************************************
+        #   Fallback Option: In case of empty response or any issue with LLM result
+        # ************************************************
+        
         jd_analyze = static_analyze_jd(jd_text)           
         state.jd_skills = jd_analyze.get('tech_stack') or []
     return state

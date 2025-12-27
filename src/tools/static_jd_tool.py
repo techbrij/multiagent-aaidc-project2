@@ -8,6 +8,15 @@ Agent: JD Analyzer
 from typing import Dict, List
 
 def extract_skills(jd_text: str) -> Dict[str, List[str]]:
+    """
+    Extracts technical skills from the job description text using keyword matching.
+
+    Args:
+        jd_text (str): The job description text.
+
+    Returns:
+        Dict[str, List[str]]: Dictionary containing the extracted tech stack.
+    """
 
     jd_text = jd_text.lower()
 
@@ -32,5 +41,14 @@ def extract_skills(jd_text: str) -> Dict[str, List[str]]:
     return {'tech_stack': tech_stack}
 
 def static_analyze_jd(jd_text: str) -> Dict:   
+    """
+    Performs a static analysis of the job description to extract skills and tech stack.
+
+    Args:
+        jd_text (str): The job description text.
+
+    Returns:
+        Dict: Dictionary containing extracted skills and tech stack.
+    """
     skills = extract_skills(jd_text)
     return {**skills}

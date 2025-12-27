@@ -12,6 +12,12 @@ from src.graph.state import AppState
 # ===================
 
 def build_app_graph() -> CompiledStateGraph:
+    """
+    Builds and compiles the application workflow graph using LangGraph.
+
+    Returns:
+        CompiledStateGraph: The compiled workflow graph for the application.
+    """
      # Build LangGraph workflow
     workflow = StateGraph(AppState)
     workflow.add_node('jd_agent', jd_agent_node)
@@ -31,6 +37,16 @@ def build_app_graph() -> CompiledStateGraph:
     return workflow.compile()
 
 def run_workflow(github_username: str, jd_path: str):
+    """
+    Runs the application workflow for a given GitHub username and job description path.
+
+    Args:
+        github_username (str): GitHub username to analyze.
+        jd_path (str): Path to the job description file.
+
+    Returns:
+        AppState: The final application state after running the workflow.
+    """
     
     graph = build_app_graph()
 
