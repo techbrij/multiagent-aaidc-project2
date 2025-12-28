@@ -18,8 +18,6 @@ def extract_skills(jd_text: str) -> Dict[str, List[str]]:
         Dict[str, List[str]]: Dictionary containing the extracted tech stack.
     """
 
-    jd_text = jd_text.lower()
-
     # Simple regex-based extraction for demo; can be replaced with NLP
     tech_keywords = [
         'python', 'javascript', 'typescript', 'java', 'c', 'c++', 'c#', 'go', 'rust', 'php',
@@ -28,18 +26,21 @@ def extract_skills(jd_text: str) -> Dict[str, List[str]]:
         'solidity', 'vba', 'abap', 'bash', 'nim', 'crystal', 'ocaml', 'f#', 'smalltalk', 'apex',
         'hack', 'pony', 'zig', 'vala', 'red', 'd', 'awk', 'idl', 'postscript'
     ]
-    found = []
-    for kw in tech_keywords:
-        if f' {kw} ' in jd_text:
-            found.append(kw)
 
-    total_found = len(found)
-    per_weight = 1/total_found
-    tech_stack =  [{
-            "language": lng,
-            "weight": per_weight,
-            "source": "manual"
-         } for lng in found]
+    tech_stack = []
+    translator = str.maketrans({p: " " for p in ",."})
+    jd_norm = f" {jd_text.lower().translate(translator)} "
+
+    found = [kw for kw in tech_keywords if f" {kw.lower()} " in jd_norm]
+
+    if found:
+        total_found = len(found)
+        per_weight = 1/total_found
+        tech_stack =  [{
+                "language": lng,
+                "weight": per_weight,
+                "source": "manual"
+            } for lng in found]
     return {'tech_stack': tech_stack}
 
 def static_analyze_jd(jd_text: str) -> Dict:   
