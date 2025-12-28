@@ -4,7 +4,19 @@ import requests
 from typing import Dict, List
 from dateutil.relativedelta import relativedelta
 
+from src.utils.retry import with_retry
+
 GITHUB_API = "https://api.github.com"
+
+
+def github_get(url: str, params: dict = None):
+    def _request():
+        resp = requests.get(url, params=params, timeout=60)
+        resp.raise_for_status()
+        return resp.json()
+
+    return with_retry(_request)
+
 
 # Helper to fetch user repos
 def fetch_repos(username: str) -> List[Dict]:
@@ -17,10 +29,14 @@ def fetch_repos(username: str) -> List[Dict]:
     Returns:
         List[Dict]: List of repository information dictionaries.
     """
-    url = f"{GITHUB_API}/users/{username}/repos?per_page=50&type=owner&sort=updated"
-    resp = requests.get(url)
-    resp.raise_for_status()
-    return resp.json()
+    try:
+        url = f"{GITHUB_API}/users/{username}/repos?per_page=50&type=owner&sort=updated"   
+        return github_get(url)
+    except requests.exceptions.HTTPError  as e:
+            status = e.response.status_code
+            if status == 404:
+                print('User or Repo not found.')
+            raise
 
 # Helper to fetch user profile
 def fetch_profile(username: str) -> Dict:
@@ -34,9 +50,7 @@ def fetch_profile(username: str) -> Dict:
         Dict: Dictionary containing profile information.
     """
     url = f"{GITHUB_API}/users/{username}"
-    resp = requests.get(url)
-    resp.raise_for_status()
-    return resp.json()
+    return github_get(url)
 
 def fetch_commit_count(username: str, repo: str) -> int:
     """
@@ -49,10 +63,13 @@ def fetch_commit_count(username: str, repo: str) -> int:
     Returns:
         int: Number of commits in the last year.
     """
-    since = (datetime.utcnow() - relativedelta(years=1)).isoformat()
-    url = f"{GITHUB_API}/repos/{username}/{repo}/commits?since={since}"
-    r = requests.get(url)
-    return len(r.json()) if r.status_code == 200 else 0
+    try:
+        since = (datetime.utcnow() - relativedelta(years=1)).isoformat()
+        url = f"{GITHUB_API}/repos/{username}/{repo}/commits?since={since}"
+        json_result = github_get(url)
+        return len(json_result) 
+    except:
+        return 0
 
 
 

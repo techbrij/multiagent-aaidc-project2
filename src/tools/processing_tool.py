@@ -29,7 +29,8 @@ def is_repo_compatible_with_jd(repo: Dict, normalize_jd_skills: List[str]) -> bo
         bool: True if the repository matches any of the required skills, False otherwise.
     """
 
-    repo_lang = normalize_language(repo.get("language", ""))
+    # to avoid subname problem - java/javascript, c/c++, go/mongo
+    repo_lang = normalize_language(repo.get("language", "")) 
 
     if not repo_lang:
         return False
