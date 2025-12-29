@@ -99,10 +99,13 @@ def calculate_advanced_score(repos_info: List[MatchRepoInfo])-> float:
     Returns:
         float: Advanced score (0.0 to 1.0).
     """
+    if not repos_info:
+        return 0.0
     
     total_open_issues_repo = 0
     total_starred_repo = 0
-    total_relevant_repos = len(repos_info)
+    total_relevant_repos = len(repos_info)    
+    
     for repo in repos_info:
         total_open_issues_repo += repo.has_issues
         total_starred_repo += repo.stars > 0
