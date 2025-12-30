@@ -73,6 +73,8 @@ def jd_agent_node(state):
     Returns:
         Updates the state object in place with extracted job description information.
     """
+
+    print("Running jd_analyzer agent")
     jd_path = state.jd_path
     jd_text = read_jd_file(jd_path)  
 
@@ -89,7 +91,7 @@ def jd_agent_node(state):
         # ************************************************
         #   Fallback Option: In case of empty response or any issue with LLM result
         # ************************************************
-        
+        print("Running fallback static analyzer" )
         jd_analyze = static_analyze_jd(jd_text)           
         state.jd_skills = jd_analyze.get('tech_stack') or []
     return state

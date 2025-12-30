@@ -15,6 +15,7 @@ def analyze_activity(state) -> List[CommitInfo]:
     Returns:
         List[CommitInfo]: A list of CommitInfo objects with commit counts for active repositories in the past year.
     """
+    print("Running activity agent")
     username = state.github_username
     repos: List[MatchRepoInfo] = state.repos_info
     cutoff = datetime.utcnow() - timedelta(days=365)  

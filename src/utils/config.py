@@ -35,4 +35,5 @@ def get_min_commits() -> int:
     Returns:
         int: Minimum number of expected commits in the last year.
     """
-    return os.getenv("EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR", 15)
+    min_commits = os.getenv("EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR", 15)
+    return int(min_commits)

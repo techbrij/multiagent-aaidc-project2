@@ -21,6 +21,8 @@ def repo_match_agent_node(state):
     Returns:
         Updates the state object in place with a list of matched repositories.
     """
+    
+    print("Running repo_match agent")
     github_username = state.github_username
     jd_skills: List[JDLanguageInfo] = state.jd_skills
 

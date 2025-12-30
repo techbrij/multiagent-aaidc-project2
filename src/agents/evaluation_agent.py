@@ -24,11 +24,12 @@ def generate_report(overall_score: float, matched_skills: str, total_relevant_re
     """   
 
     lines = [
-         f"Found {total_relevant_repos} relevant repositories. ",
-        f"Tech stack match: {matched_skills}",
-        f"Active repositories {total_active_repos} in last year. ",
+
+         f"Total relevant repositories: {total_relevant_repos}",        
+        f"Active repositories(in last year): {total_active_repos}",
+        f"Matched skills: {matched_skills}",
         f"Score: {overall_score:.2f}",
-        "\n--- Human-Readable Evaluation ---",
+        "\n--- Result ---",
         f"Candidate's open-source work matches {overall_score*100:.1f}% of the required tech stack.",
     ]
     if overall_score > 0.8:
@@ -50,7 +51,7 @@ def evaluation_agent_node(state: AppState):
     Returns:
         Updates the state object in place with evaluation results and report.
     """
-    
+    print("Running evaluation agent")
     skill_score, matched_skills = calculate_repo_match_score(state.jd_skills, state.repos_info)
     commit_score = calculate_commit_score(state.commit_info)
     advanced_score = calculate_advanced_score(state.repos_info)

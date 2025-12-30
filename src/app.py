@@ -10,10 +10,9 @@ import os
 from src.graph.workflow import run_workflow
 
 def main():
-    print("=== JD vs GitHub Profile Evaluator ===")
+    print("="*50 + "\nJD-Driven Agentic GitHub Profile Evaluator\n" + "="*50)
 
-    # github_username = input("Enter GitHub username: ")
-    github_username = 'techbrij'
+    github_username = input("Enter GitHub username: ")
     
     jd_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'job-description.txt')
     

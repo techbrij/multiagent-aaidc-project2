@@ -85,6 +85,7 @@ def calculate_commit_score(commit_info: List[CommitInfo]) -> float:
         total_commits += repo.commit_count_1y
 
     min_commits = get_min_commits()
+    print(f'Criteria: Minimum commits: {min_commits}')
     commit_score =  min(total_commits/min_commits, 1.0)
     return commit_score
 

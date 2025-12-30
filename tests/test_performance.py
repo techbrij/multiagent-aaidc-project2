@@ -9,7 +9,8 @@ def test_workflow_step_timings():
     Prints timing for each step and asserts each is under a reasonable threshold.
     """
     # Example state setup (adjust as needed)
-    github_username = "techbrij"  # Replace with a real/test user
+    github_users = ["techbrij", "psf", "ytdl-org", "httpie", "Textualize", "StephenCleary"]
+    github_username = github_users[0]
     jd_path = "data/job-description.txt"
     
     graph = build_app_graph()
