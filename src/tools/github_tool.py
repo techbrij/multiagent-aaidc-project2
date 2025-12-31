@@ -4,6 +4,7 @@ import requests
 from typing import Dict, List
 from dateutil.relativedelta import relativedelta
 
+from src.utils.config import get_max_repos
 from src.utils.retry import with_retry
 
 GITHUB_API = "https://api.github.com"
@@ -30,7 +31,8 @@ def fetch_repos(username: str) -> List[Dict]:
         List[Dict]: List of repository information dictionaries.
     """
     try:
-        url = f"{GITHUB_API}/users/{username}/repos?per_page=50&type=owner&sort=updated"   
+        max_repos = get_max_repos()
+        url = f"{GITHUB_API}/users/{username}/repos?per_page={max_repos}&type=owner&sort=updated"   
         return github_get(url)
     except requests.exceptions.HTTPError  as e:
             status = e.response.status_code

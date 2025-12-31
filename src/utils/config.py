@@ -37,3 +37,14 @@ def get_min_commits() -> int:
     """
     min_commits = os.getenv("EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR", 15)
     return int(min_commits)
+
+
+def get_max_repos() -> int:
+    """
+    Returns the maximum number of repos to fetch from environment or default.
+
+    Returns:
+        int: maximum number of repos to fetch.
+    """
+    max_repos = os.getenv("MAX_REPOS_TO_FETCH", 50)
+    return int(max_repos)
