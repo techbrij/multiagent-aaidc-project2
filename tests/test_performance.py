@@ -11,7 +11,8 @@ def test_workflow_step_timings():
     # Example state setup (adjust as needed)
     github_users = ["techbrij", "psf", "ytdl-org", "httpie", "Textualize", "StephenCleary"]
     github_username = github_users[0]
-    jd_path = "data/job-description.txt"
+    print (f"\nGitHub Username: {github_username}\n")
+    jd_path = "data/job-description.txt"    
     
     graph = build_app_graph()
     timings = {}
