@@ -1,5 +1,5 @@
 
-# JD-Driven Agentic GitHub Profile Evaluator: AAIDC Project2
+# JD-Driven Agentic GitHub Profile Evaluator
 
 ## Overview
 
@@ -104,8 +104,8 @@ AI/ML Practitioners, Engineering team, Hiring Managers and recruiters who want t
      MAX_REPOS_TO_FETCH = 50
 
      ```
-   EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR: this parameters is used in activity criteria how many commits are expected for the provided JD.
-   MAX_REPOS_TO_FETCH: To control GitHub API call, this is used. 
+   - EXPECTED_MIN_COMMITS_IN_LAST_ONE_YEAR: this parameters is used in activity criteria how many commits are expected for the provided JD.
+   - MAX_REPOS_TO_FETCH: To control GitHub API call, this is used. 
 
    These configuration parameters should be tuned based on the JD and GitHub users.
 
