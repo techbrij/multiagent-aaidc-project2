@@ -33,11 +33,11 @@ def generate_report(overall_score: float, matched_skills: str, total_relevant_re
         f"Candidate's open-source work matches {overall_score*100:.1f}% of the required tech stack.",
     ]
     if overall_score > 0.8:
-        lines.append("Excellent match.")
+        lines.append("🚀 Excellent match.")
     elif overall_score > 0.5:
-        lines.append("Good match.")
+        lines.append("✅ Good match.")
     else:
-        lines.append("Partial match. Consider more relevant contributions or signals.")
+        lines.append("⚠️ Partial match. Consider more relevant contributions or signals.")
     return '\n'.join(lines)
 
 

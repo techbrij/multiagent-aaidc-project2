@@ -75,11 +75,11 @@ def jd_agent_node(state):
     """
 
     print("Running jd_analyzer agent")
-    jd_path = state.jd_path
-    jd_text = read_jd_file(jd_path)  
-
+    if not state.jd_text:
+        jd_path = state.jd_path
+        state.jd_text = read_jd_file(jd_path)  
     try:
-        result = llm_extract_lng_from_JD(jd_text)
+        result = llm_extract_lng_from_JD(state.jd_text)
         json_result = json.loads(result)
         json_result = json_result.get('languages')
     except Exception as e:
@@ -92,6 +92,6 @@ def jd_agent_node(state):
         #   Fallback Option: In case of empty response or any issue with LLM result
         # ************************************************
         print("Running fallback static analyzer" )
-        jd_analyze = static_analyze_jd(jd_text)           
+        jd_analyze = static_analyze_jd(state.jd_text)           
         state.jd_skills = jd_analyze.get('tech_stack') or []
     return state

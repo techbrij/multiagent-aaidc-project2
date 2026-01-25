@@ -10,6 +10,18 @@ from src.utils.retry import with_retry
 GITHUB_API = "https://api.github.com"
 
 
+def validate_username(username) -> bool:
+    """To validate whether Github username exists
+
+    Args:
+        username (str): GitHub user name
+
+    Returns:
+        bool: Is exists
+    """
+    r = requests.get( f"{GITHUB_API}/users/{username}")
+    return r.status_code == 200
+
 def github_get(url: str, params: dict = None):
     def _request():
         resp = requests.get(url, params=params, timeout=60)

@@ -16,7 +16,7 @@ def main():
     
     jd_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'job-description.txt')
     
-    final_state = run_workflow(github_username, jd_path)
+    final_state = run_workflow(github_username, jd_path, '')
    
     print("\n=== Evaluation Report ===\n")
     print(final_state['report'])

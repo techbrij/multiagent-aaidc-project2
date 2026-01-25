@@ -31,6 +31,7 @@ class CommitInfo():
 class AppState(BaseModel):
     github_username: str = ''
     jd_path: str =''
+    jd_text: str =''
     jd_skills: List[JDLanguageInfo] = []
     repos_info: List[MatchRepoInfo] = []
     commit_info: List[CommitInfo] = []

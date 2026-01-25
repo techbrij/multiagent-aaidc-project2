@@ -36,14 +36,14 @@ def build_app_graph() -> CompiledStateGraph:
 
     return workflow.compile()
 
-def run_workflow(github_username: str, jd_path: str):
+def run_workflow(github_username: str, jd_path: str, jd_text: str):
     """
     Runs the application workflow for a given GitHub username and job description path.
 
     Args:
         github_username (str): GitHub username to analyze.
         jd_path (str): Path to the job description file.
-
+        jd_text (str): Job description content
     Returns:
         AppState: The final application state after running the workflow.
     """
@@ -51,5 +51,5 @@ def run_workflow(github_username: str, jd_path: str):
     graph = build_app_graph()
 
     # Run the workflow
-    final_state = graph.invoke(AppState(github_username=github_username, jd_path=jd_path), config={"recursion_limit": 100})
+    final_state = graph.invoke(AppState(github_username=github_username, jd_path=jd_path, jd_text=jd_text), config={"recursion_limit": 100})
     return final_state
