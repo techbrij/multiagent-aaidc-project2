@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from src.graph.state import CommitInfo, JDLanguageInfo, MatchRepoInfo
 from src.utils.config import get_min_commits
+from src.utils.logger import logger
 
 def normalize_language(lang: str) -> str:
     if not lang:
@@ -85,7 +86,7 @@ def calculate_commit_score(commit_info: List[CommitInfo]) -> float:
         total_commits += repo.commit_count_1y
 
     min_commits = get_min_commits()
-    print(f'Criteria: Minimum commits: {min_commits}')
+    logger.info(f'Criteria: Minimum commits: {min_commits}')
     commit_score =  min(total_commits/min_commits, 1.0)
     return commit_score
 

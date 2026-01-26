@@ -6,6 +6,7 @@ Agent: Evaluation & Report
 
 from src.graph.state import AppState
 from src.tools.processing_tool import calculate_advanced_score, calculate_commit_score, calculate_overall_score, calculate_repo_match_score
+from src.utils.logger import logger
 
 
 
@@ -51,7 +52,7 @@ def evaluation_agent_node(state: AppState):
     Returns:
         Updates the state object in place with evaluation results and report.
     """
-    print("Running evaluation agent")
+    logger.info("Running evaluation agent")
     skill_score, matched_skills = calculate_repo_match_score(state.jd_skills, state.repos_info)
     commit_score = calculate_commit_score(state.commit_info)
     advanced_score = calculate_advanced_score(state.repos_info)

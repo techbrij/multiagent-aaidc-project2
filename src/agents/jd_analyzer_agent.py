@@ -6,6 +6,7 @@ from src.tools.static_jd_tool import static_analyze_jd
 from langchain_core.messages import SystemMessage, HumanMessage
 
 from src.utils.config import get_llm
+from src.utils.logger import logger
 
 SYSTEM_PROMPT_JD_EXTRACTOR = """
 You are a technical recruiter assistant specialized in analyzing software engineering job descriptions.
@@ -59,7 +60,7 @@ def llm_extract_lng_from_JD(jd_text: str) -> dict:
         ])
         return response.content
     except Exception as e:
-        print(f"LLM call failed in llm_extract_lng_from_JD: {str(e)}")
+        logger.error(f"LLM call failed in llm_extract_lng_from_JD: {str(e)}")
         raise
 
 
@@ -74,7 +75,7 @@ def jd_agent_node(state):
         Updates the state object in place with extracted job description information.
     """
 
-    print("Running jd_analyzer agent")
+    logger.info("Running jd_analyzer agent")
     if not state.jd_text:
         jd_path = state.jd_path
         state.jd_text = read_jd_file(jd_path)  
@@ -83,7 +84,7 @@ def jd_agent_node(state):
         json_result = json.loads(result)
         json_result = json_result.get('languages')
     except Exception as e:
-        print(f'Error: {str(e)}')
+        logger.error(f'Error: {str(e)}')
         json_result = []
 
     state.jd_skills = json_result
@@ -91,7 +92,7 @@ def jd_agent_node(state):
         # ************************************************
         #   Fallback Option: In case of empty response or any issue with LLM result
         # ************************************************
-        print("Running fallback static analyzer" )
+        logger.info("Running fallback static analyzer" )
         jd_analyze = static_analyze_jd(state.jd_text)           
         state.jd_skills = jd_analyze.get('tech_stack') or []
     return state

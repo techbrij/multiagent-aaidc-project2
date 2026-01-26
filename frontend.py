@@ -4,6 +4,7 @@ import re
 from src.tools.file_reader_tool import read_jd_file
 from src.tools.github_tool import validate_username
 from src.utils import config
+from src.utils.logger import logger
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -55,10 +56,13 @@ with col2:
     username = st.text_input("GitHub User Name: (Suppose the profile url is https://github.com/techbrij then user name is techbrij)", value=github_username, help="Suppose the profile url is https://github.com/techbrij then user name is techbrij")
     
     if st.button("🔍 Analyze Profile"):
-        if not validate_username(username):
+        if not username:
+            st.error("Please enter a GitHub user name")
+        elif not validate_username(username):
             st.error("Please enter a valid GitHub user name.") 
         else:
             with st.spinner("Running multi-agent analysis..."):
+                logger.info(f"Processing started for user {username} from UI")
                 try:
                     result = run_workflow(
                         github_username=github_username,
@@ -82,9 +86,10 @@ with col2:
                             markdowns.append(line)
 
                     st.markdown('\n'.join(markdowns), unsafe_allow_html=True)
+                    logger.info("Processing completed on UI")
 
                 except Exception as e:
-                    logger.exception(f"UI error: {e}")
+                    logger.error(f"UI error: {e}")
                     st.error(
                         "An error occurred while analyzing the repository. "
                         "Please check your configuration and try again."

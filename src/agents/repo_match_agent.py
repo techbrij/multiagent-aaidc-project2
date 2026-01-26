@@ -9,7 +9,7 @@ from typing import List
 from src.graph.state import JDLanguageInfo, MatchRepoInfo
 from src.tools.github_tool import fetch_repos
 from src.tools.processing_tool import is_repo_compatible_with_jd, normalize_language
-
+from src.utils.logger import logger
 
 def repo_match_agent_node(state):
     """
@@ -22,7 +22,7 @@ def repo_match_agent_node(state):
         Updates the state object in place with a list of matched repositories.
     """
     
-    print("Running repo_match agent")
+    logger.info("Running repo_match agent")
     github_username = state.github_username
     jd_skills: List[JDLanguageInfo] = state.jd_skills
 

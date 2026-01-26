@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from src.utils.config import get_max_repos
 from src.utils.retry import with_retry
+from src.utils.logger import logger
 
 GITHUB_API = "https://api.github.com"
 
@@ -49,7 +50,7 @@ def fetch_repos(username: str) -> List[Dict]:
     except requests.exceptions.HTTPError  as e:
             status = e.response.status_code
             if status == 404:
-                print('User or Repo not found.')
+                logger.info('User or Repo not found.')
             raise
 
 # Helper to fetch user profile
