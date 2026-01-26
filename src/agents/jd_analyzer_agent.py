@@ -2,6 +2,7 @@
 
 import json
 from src.tools.file_reader_tool import read_jd_file
+from src.tools.safety_validator_tool import SafetyValidator
 from src.tools.static_jd_tool import static_analyze_jd
 from langchain_core.messages import SystemMessage, HumanMessage
 
@@ -79,17 +80,29 @@ def jd_agent_node(state):
     logger.info("Running jd_analyzer agent")
     if not state.jd_text:
         jd_path = state.jd_path
-        state.jd_text = read_jd_file(jd_path)  
+        state.jd_text = read_jd_file(jd_path)
 
-    # Validate the Job description    
+    # Manual validation for length and HTML/scripts
     jd_value_sanitized = sanitize_text(state.jd_text)
-    if not jd_value_sanitized or len(jd_value_sanitized) < 10:
-        raise Exception("Job description is empty or too short. Please provide a valid job description")
+    if not jd_value_sanitized or len(jd_value_sanitized) < 10 or len(jd_value_sanitized) > 5000:
+        logger.error("Job description is empty, too short, or too long.")
+        state.jd_skills = []
+        return state
+    
+    # check for toxicity and prompt injection 
+    safety_validator = SafetyValidator()
+    is_valid, reason = safety_validator.validate(jd_value_sanitized)
+    if not is_valid:
+        raise Exception(reason)
 
     try:
         result = llm_extract_lng_from_JD(state.jd_text)
-        json_result = json.loads(result)
-        json_result = json_result.get('languages')
+        try:
+            json_result = json.loads(result)
+            json_result = json_result.get('languages')
+        except Exception as json_err:
+            logger.error(f'LLM output JSON decode error: {json_err} | Raw output: {result}')
+            json_result = []
     except Exception as e:
         logger.error(f'Error: {str(e)}')
         json_result = []
@@ -100,6 +113,8 @@ def jd_agent_node(state):
         #   Fallback Option: In case of empty response or any issue with LLM result
         # ************************************************
         logger.info("Running fallback static analyzer" )
-        jd_analyze = static_analyze_jd(state.jd_text)           
+        jd_analyze = static_analyze_jd(state.jd_text)
         state.jd_skills = jd_analyze.get('tech_stack') or []
     return state
+
+
