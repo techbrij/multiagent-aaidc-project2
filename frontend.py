@@ -79,18 +79,29 @@ with col2:
                         jd_text=jd_value_sanitized
                     )
 
+                    # Output validation
+                    report = result.get('report', '')
+                    score = result.get('score', None)
+                    if not isinstance(report, str) or not report.strip():
+                        logger.error("Output validation failed: report is missing or not a string.")
+                        st.error("Internal error: Evaluation report is missing or invalid.")
+        
+                    if not isinstance(score, float) or not (0.0 <= score <= 1.0):
+                        logger.error(f"Output validation failed: score is invalid ({score}).")
+                        st.error("Internal error: Score is missing or out of range.")
+
                     # Convert output to Markdown for better formatting and visualization
                     markdowns = []
                     markdowns.append('**Evaluation Report:**')
-                    output = result['report'].split("\n")
-                    for line in output:
+                    output_lines = report.split("\n")
+                    for line in output_lines:
                         if ('- Result -' in line):
                             markdowns.append('#### Result')
                         elif ': ' in line:
                             markdowns.append('- **' + line.replace(': ', ':** '))
                         elif "Candidate's open-source" in line:
-                            result = re.sub(r'(\d+(?:\.\d+)?%)', r'<span style="font-size:1.5em; font-weight:bold;">\1</span>', line)
-                            markdowns.append(result)
+                            result_line = re.sub(r'(\d+(?:\.\d+)?%)', r'<span style="font-size:1.5em; font-weight:bold;">\1</span>', line)
+                            markdowns.append(result_line)
                         else:
                             markdowns.append(line)
 

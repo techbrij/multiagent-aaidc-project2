@@ -30,8 +30,20 @@ def main():
 
         final_state = run_workflow(github_username, jd_path, '')
 
+        # Output validation
+        report = final_state.get('report', '')
+        score = final_state.get('score', None)
+        if not isinstance(report, str) or not report.strip():
+            logger.error("Output validation failed: report is missing or not a string.")
+            print("Internal error: Evaluation report is missing or invalid.")
+            sys.exit(1)
+        if not isinstance(score, float) or not (0.0 <= score <= 1.0):
+            logger.error(f"Output validation failed: score is invalid ({score}).")
+            print("Internal error: Score is missing or out of range.")
+            sys.exit(1)
+
         print("\n=== Evaluation Report ===\n")
-        print(final_state['report'])
+        print(report)
         logger.info("Processing completed")
 
     except KeyboardInterrupt:
