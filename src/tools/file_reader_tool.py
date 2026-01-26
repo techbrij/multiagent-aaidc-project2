@@ -11,6 +11,7 @@ def read_jd_file(jd_path: str) -> str:
         str: Content of the job description file.
     """
     with open(jd_path, 'r', encoding='utf-8') as f:
-        return f.read()
+        return f.read().strip()
+    
     
     

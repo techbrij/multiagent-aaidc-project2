@@ -5,6 +5,7 @@ from src.tools.file_reader_tool import read_jd_file
 from src.tools.static_jd_tool import static_analyze_jd
 from langchain_core.messages import SystemMessage, HumanMessage
 
+from src.utils.common import sanitize_text
 from src.utils.config import get_llm
 from src.utils.logger import logger
 
@@ -79,6 +80,12 @@ def jd_agent_node(state):
     if not state.jd_text:
         jd_path = state.jd_path
         state.jd_text = read_jd_file(jd_path)  
+
+    # Validate the Job description    
+    jd_value_sanitized = sanitize_text(state.jd_text)
+    if not jd_value_sanitized or len(jd_value_sanitized) < 10:
+        raise Exception("Job description is empty or too short. Please provide a valid job description")
+
     try:
         result = llm_extract_lng_from_JD(state.jd_text)
         json_result = json.loads(result)

@@ -12,15 +12,26 @@ GITHUB_API = "https://api.github.com"
 
 
 def validate_username(username) -> bool:
-    """To validate whether Github username exists
+    """To validate whether Github username exists and is well-formed
 
     Args:
         username (str): GitHub user name
 
     Returns:
-        bool: Is exists
+        bool: Is exists and valid
     """
-    r = requests.get( f"{GITHUB_API}/users/{username}")
+    import re
+    # GitHub usernames: 1-39 chars, alphanumeric or hyphens, cannot start/end with hyphen, no consecutive hyphens
+    if not isinstance(username, str):
+        return False
+    username = username.strip()
+    if not username:
+        return False
+    if not re.match(r'^(?!-)[A-Za-z0-9-]{1,39}(?<!-)$', username):
+        return False
+    if '--' in username:
+        return False
+    r = requests.get(f"{GITHUB_API}/users/{username}")
     return r.status_code == 200
 
 def github_get(url: str, params: dict = None):

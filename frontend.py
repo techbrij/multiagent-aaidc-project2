@@ -4,6 +4,7 @@ import re
 from src.tools.file_reader_tool import read_jd_file
 from src.tools.github_tool import validate_username
 from src.utils import config
+from src.utils.common import sanitize_text
 from src.utils.logger import logger
 import streamlit as st
 from dotenv import load_dotenv
@@ -53,26 +54,34 @@ with col2:
     st.info("If you want to change configuration, please update .env file and rerun the application")
 
     github_username = "techbrij"
-    username = st.text_input("GitHub User Name: (Suppose the profile url is https://github.com/techbrij then user name is techbrij)", value=github_username, help="Suppose the profile url is https://github.com/techbrij then user name is techbrij")
-    
+    username = st.text_input(
+        "GitHub User Name: (Suppose the profile url is https://github.com/techbrij then user name is techbrij)",
+        value=github_username,
+        help="Suppose the profile url is https://github.com/techbrij then user name is techbrij"
+    )
+
     if st.button("🔍 Analyze Profile"):
+        username = username.strip()
+        jd_value_sanitized = sanitize_text(jd_value)
         if not username:
             st.error("Please enter a GitHub user name")
         elif not validate_username(username):
-            st.error("Please enter a valid GitHub user name.") 
+            st.error("Please enter a valid GitHub user name. Usernames must be 1-39 characters, alphanumeric or hyphens, no leading/trailing/consecutive hyphens.")
+        elif not jd_value_sanitized or len(jd_value_sanitized) < 10:
+            st.error("Job description is empty or too short. Please provide a valid job description.")
         else:
             with st.spinner("Running multi-agent analysis..."):
                 logger.info(f"Processing started for user {username} from UI")
                 try:
                     result = run_workflow(
-                        github_username=github_username,
+                        github_username=username,
                         jd_path='',
-                        jd_text=jd_text                        
-                    ) 
+                        jd_text=jd_value_sanitized
+                    )
 
                     # Convert output to Markdown for better formatting and visualization
                     markdowns = []
-                    markdowns.append('**Evaluation Report:**')     
+                    markdowns.append('**Evaluation Report:**')
                     output = result['report'].split("\n")
                     for line in output:
                         if ('- Result -' in line):
