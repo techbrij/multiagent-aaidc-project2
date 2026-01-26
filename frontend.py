@@ -63,21 +63,38 @@ with col2:
     if st.button("🔍 Analyze Profile"):
         username = username.strip()
         jd_value_sanitized = sanitize_text(jd_value)
-        if not username:
-            st.error("Please enter a GitHub user name")
-        elif not validate_username(username):
-            st.error("Please enter a valid GitHub user name. Usernames must be 1-39 characters, alphanumeric or hyphens, no leading/trailing/consecutive hyphens.")
-        elif not jd_value_sanitized or len(jd_value_sanitized) < 10:
-            st.error("Job description is empty or too short. Please provide a valid job description.")
-        else:
-            with st.spinner("Running multi-agent analysis..."):
-                logger.info(f"Processing started for user {username} from UI")
-                try:
-                    result = run_workflow(
-                        github_username=username,
-                        jd_path='',
-                        jd_text=jd_value_sanitized
-                    )
+        error_message = None
+        # Security: enforce max length limits
+        MAX_USERNAME_LEN = 39
+        MAX_JD_LEN = 5000
+        try:
+            if not username:
+                error_message = "Please enter a GitHub user name"
+            elif len(username) > MAX_USERNAME_LEN:
+                logger.warning(f"Blocked username over max length: {username}")
+                error_message = f"GitHub username too long (max {MAX_USERNAME_LEN} characters)."
+            elif not validate_username(username):
+                error_message = "Please enter a valid GitHub user name. Usernames must be 1-39 characters, alphanumeric or hyphens, no leading/trailing/consecutive hyphens."
+            elif not jd_value_sanitized or len(jd_value_sanitized) < 10:
+                error_message = "Job description is empty or too short. Please provide a valid job description."
+            elif len(jd_value_sanitized) > MAX_JD_LEN:
+                logger.warning("Blocked JD over max length.")
+                error_message = f"Job description too long (max {MAX_JD_LEN} characters)."
+            if error_message:
+                st.error(error_message)
+            else:
+                with st.spinner("Running multi-agent analysis..."):
+                    logger.info(f"Processing started for user {username} from UI")
+                    try:
+                        result = run_workflow(
+                            github_username=username,
+                            jd_path='',
+                            jd_text=jd_value_sanitized
+                        )
+                    except Exception as e:
+                        logger.error(f"Workflow execution error: {e}")
+                        st.error("An error occurred during analysis. Please check your configuration and try again.")
+                        
 
                     # Output validation
                     report = result.get('report', '')
@@ -85,12 +102,13 @@ with col2:
                     if not isinstance(report, str) or not report.strip():
                         logger.error("Output validation failed: report is missing or not a string.")
                         st.error("Internal error: Evaluation report is missing or invalid.")
-        
+                        
                     if not isinstance(score, float) or not (0.0 <= score <= 1.0):
                         logger.error(f"Output validation failed: score is invalid ({score}).")
                         st.error("Internal error: Score is missing or out of range.")
+                        
+                
 
-                    # Convert output to Markdown for better formatting and visualization
                     markdowns = []
                     markdowns.append('**Evaluation Report:**')
                     output_lines = report.split("\n")
@@ -107,13 +125,9 @@ with col2:
 
                     st.markdown('\n'.join(markdowns), unsafe_allow_html=True)
                     logger.info("Processing completed on UI")
-
-                except Exception as e:
-                    logger.error(f"UI error: {e}")
-                    st.error(
-                        "An error occurred while analyzing the repository. "
-                        "Please check your configuration and try again."
-                    )
+        except Exception as e:
+            logger.error(f"UI error: {e}")
+            st.error("An unexpected error occurred. Please try again or contact support.")
 
 # Footer
 st.markdown("---")
