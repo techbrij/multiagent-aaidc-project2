@@ -114,7 +114,13 @@ AI/ML Practitioners, Engineering team, Hiring Managers and recruiters who want t
 
 You can put your JD file in data folder and modify the path in `src/app.py` OR overwrite `data/job-description.txt` file.
 
-Run the main application:
+### Run Web Interface:
+```
+streamlit run app.py
+```
+Open your browser at `http://localhost:8501`
+
+### Run CLI:
 ```
 python -m src.app
 ```
@@ -183,19 +189,48 @@ The final fit score is calculated in four stages, executed sequentially:
 
 **Note:** this is core implementation. Many more criteria and logics can be added to improve the quality.
 
-## Testing
+## User Interface [New]
 
-To run all tests:
+A lightweight Streamlit-based interface abstracts system complexity and exposes agent actions through a guided workflow.
+
+- Start the Streamlit app: `streamlit run frontend.py`
+- By default, it shows Job description from `data\job-description.txt`, you can modify or enter new job description.
+- Enter GitHub user name
+- Click "Analyze Profile" button
+- View the score and result
+
+## Safety & Security Features [New]
+
+- Added validation on GitHub user name input
+- Added toxicity and prompt injection validations on Job description input
+- Output validation is now enforced in both the Streamlit UI and CLI: the report and score are checked for type, content, and valid range before display. 
+- Improved error handling with graceful degradation
+- Added Centralize logger for logging
+
+## Testing [New]
+
+Added Unit and Integration tests having more than 80% coverage.
 
 ```
+# Run all tests:
 pytest tests/ -s
+
+# Run with coverage 
+pytest tests/ -v --cov=src --cov-report=html
+
+# Run the performance test:
+pytest tests/test_integration/test_performance.py -s
+
+# Run integration tests
+pytest tests/ -v -m integration
 ```
 
-To run the performance test:
+## Resilience & Monitoring
 
-```
-pytest tests/test_performance.py -s
-```
+- Retry logic with GitHub API calls
+- Graceful handling of agent failures and timeouts
+- Logging of failures, retries, and fallback events for debugging and traceability
+- Streamlit UI built in health monitoring
 
 ## Configuration
 
@@ -203,9 +238,20 @@ pytest tests/test_performance.py -s
 - `data/job-description.txt`: Example job description file
 - `src/app.py`: Main entry point
 
+
 ## Example Job Description
 
 See `data/job-description.txt` for a sample JD used in evaluation.
+
+## Docker Support [New]
+
+```
+# Build image
+docker build -t profile-evaluator .
+
+# Run container
+docker run -p 8501:8501 --env-file .env profile-evaluator
+```
 
 ## Contributing
 
@@ -215,9 +261,8 @@ Contributions are welcome! Please open issues or submit pull requests for improv
 
 MIT License (see LICENSE file)
 
-## Contact
+## Contact & Support
 
-Brij Mohan
-
-- GitHub: https://github.com/techbrij
+- Issues: [GitHub Issues](https://github.com/techbrij/multiagent-aaidc-project2/issues)
+- Author: [TechBrij](https://github.com/techbrij)
 
