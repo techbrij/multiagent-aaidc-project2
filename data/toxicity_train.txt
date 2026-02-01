@@ -1,0 +1,10 @@
+__label__toxic You are a stupid bot. This is terrible and hateful content.
+__label__toxic I hate you and everyone like you.
+__label__toxic You are so dumb and annoying.
+__label__toxic This is the worst thing ever, you idiot.
+__label__toxic Shut up, you moron.
+__label__not_toxic We are seeking a Senior Software Engineer with 5+ years of experience.
+__label__not_toxic Looking for Python developer. Must know REST APIs and SQL.
+__label__not_toxic The system should prompt the user for input.
+__label__not_toxic Strong communication skills required.
+__label__not_toxic We offer competitive salary, equity, and comprehensive benefits.
