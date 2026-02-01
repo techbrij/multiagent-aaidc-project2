@@ -93,41 +93,44 @@ with col2:
                         )
                     except Exception as e:
                         logger.error(f"Workflow execution error: {e}")
-                        st.error("An error occurred during analysis. Please check your configuration and try again.")
+                        raise
                         
+                    if result:
+                        # Output validation
+                        report = result.get('report', '')
+                        score = result.get('score', None)
+                        if not isinstance(report, str) or not report.strip():
+                            logger.error("Output validation failed: report is missing or not a string.")
+                            st.error("Internal error: Evaluation report is missing or invalid.")
+                            
+                        if not isinstance(score, float) or not (0.0 <= score <= 1.0):
+                            logger.error(f"Output validation failed: score is invalid ({score}).")
+                            st.error("Internal error: Score is missing or out of range.")
+                            
+                    
 
-                    # Output validation
-                    report = result.get('report', '')
-                    score = result.get('score', None)
-                    if not isinstance(report, str) or not report.strip():
-                        logger.error("Output validation failed: report is missing or not a string.")
-                        st.error("Internal error: Evaluation report is missing or invalid.")
-                        
-                    if not isinstance(score, float) or not (0.0 <= score <= 1.0):
-                        logger.error(f"Output validation failed: score is invalid ({score}).")
-                        st.error("Internal error: Score is missing or out of range.")
-                        
-                
+                        markdowns = []
+                        markdowns.append('**Evaluation Report:**')
+                        output_lines = report.split("\n")
+                        for line in output_lines:
+                            if ('- Result -' in line):
+                                markdowns.append('#### Result')
+                            elif ': ' in line:
+                                markdowns.append('- **' + line.replace(': ', ':** '))
+                            elif "Candidate's open-source" in line:
+                                result_line = re.sub(r'(\d+(?:\.\d+)?%)', r'<span style="font-size:1.5em; font-weight:bold;">\1</span>', line)
+                                markdowns.append(result_line)
+                            else:
+                                markdowns.append(line)
 
-                    markdowns = []
-                    markdowns.append('**Evaluation Report:**')
-                    output_lines = report.split("\n")
-                    for line in output_lines:
-                        if ('- Result -' in line):
-                            markdowns.append('#### Result')
-                        elif ': ' in line:
-                            markdowns.append('- **' + line.replace(': ', ':** '))
-                        elif "Candidate's open-source" in line:
-                            result_line = re.sub(r'(\d+(?:\.\d+)?%)', r'<span style="font-size:1.5em; font-weight:bold;">\1</span>', line)
-                            markdowns.append(result_line)
-                        else:
-                            markdowns.append(line)
-
-                    st.markdown('\n'.join(markdowns), unsafe_allow_html=True)
+                        st.markdown('\n'.join(markdowns), unsafe_allow_html=True)
                     logger.info("Processing completed on UI")
         except Exception as e:
             logger.error(f"UI error: {e}")
-            st.error("An unexpected error occurred. Please try again or contact support.")
+            if "Toxicity" in str(e):
+                st.error(f"{str(e)} Please check the provided Job description.")
+            else:
+                st.error("An unexpected error occurred. Please try again or contact support.")
 
 # Footer
 st.markdown("---")
