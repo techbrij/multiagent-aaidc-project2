@@ -39,7 +39,7 @@ col1, col2 = st.columns([1, 1])
 
 with col1:
     st.markdown("#### Job Description")
-    jd_value = st.text_area("", value=jd_text, height=500, label_visibility="collapsed")
+    jd_value = st.text_area("job description", value=jd_text, height=500, label_visibility="collapsed")
 
 with col2:
 

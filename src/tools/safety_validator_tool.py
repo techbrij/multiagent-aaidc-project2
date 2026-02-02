@@ -1,10 +1,12 @@
 from detoxify import Detoxify 
+from transformers import logging as transformers_logging
+transformers_logging.set_verbosity_error()
 
 class SafetyValidator:
     def __init__(self, toxicity_threshold=0.5):
 
         # Load the toxicity model once (it takes a moment)
-        self.model = Detoxify('original')
+        self.model = Detoxify('original-small')
         self.threshold = toxicity_threshold
         
         # Security: Common prompt injection phrases
