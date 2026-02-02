@@ -116,7 +116,7 @@ You can put your JD file in data folder and modify the path in `src/app.py` OR o
 
 ### Run Web Interface:
 ```
-streamlit run app.py
+streamlit run frontend.py
 ```
 Open your browser at `http://localhost:8501`
 
