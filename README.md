@@ -207,6 +207,13 @@ A lightweight Streamlit-based interface abstracts system complexity and exposes 
 - Improved error handling with graceful degradation
 - Added Centralize logger for logging
 
+## Production Code Standards & Reliability [Enhanced]
+
+- **Production-Ready Code:** The codebase follows best practices for readability, modularity, and maintainability. All critical logic is encapsulated in well-documented modules and functions.
+- **Comprehensive Error Handling:** Robust error handling is implemented throughout the agents, tools, and UI layers. All API calls, file operations, and user inputs are validated and wrapped with try/except blocks, with meaningful error messages and graceful fallback strategies.
+- **Health Checks:** The Streamlit UI includes built-in health monitoring. Additional health check endpoints or scripts can be added for production deployments to verify service and dependency status.
+- **Logging:** Centralized logging captures errors, warnings, and key events for traceability and debugging. Logs are written to the `logs/` directory and can be integrated with external monitoring tools.
+
 ## Testing [New]
 
 Added Unit and Integration tests having more than 80% coverage.
@@ -224,6 +231,38 @@ pytest tests/test_integration/test_performance.py -s
 # Run integration tests
 pytest tests/ -v -m integration
 ```
+## Troubleshooting & Maintenance Guide
+
+### Troubleshooting
+
+- **Startup Issues:**
+   - Ensure all environment variables are set in the `.env` file.
+   - Check that all dependencies are installed (`pip install -r requirements.txt`).
+   - Review logs in the `logs/` directory for error details.
+- **API Failures:**
+   - Verify network connectivity and API keys (Groq, GitHub).
+   - Check for rate limits or invalid credentials in the logs.
+- **UI/CLI Errors:**
+   - Validate input formats (GitHub username, JD file).
+   - Look for error messages in the UI or CLI output.
+- **Docker Issues:**
+   - Ensure Docker is running and ports are available.
+   - Use `docker logs <container>` to inspect runtime errors.
+
+### Maintenance
+
+- **Dependencies:**
+   - Regularly update Python packages and review for security advisories.
+- **Configuration:**
+   - Tune `.env` parameters for new JDs or API changes.
+- **Logs:**
+   - Monitor and rotate logs in the `logs/` directory to prevent disk overuse.
+- **Testing:**
+   - Run tests after any code or dependency update to ensure stability.
+- **Health Checks:**
+   - Periodically verify health endpoints and monitoring scripts.
+
+Focusing on enhancing production code standards, implementing comprehensive error handling, adding health checks, and following this troubleshooting and maintenance guide will significantly boost the code's reliability and maintainability.
 
 ## Resilience & Monitoring
 
@@ -259,7 +298,7 @@ Contributions are welcome! Please open issues or submit pull requests for improv
 
 ## License
 
-MIT License (see LICENSE file)
+MIT License (see [LICENSE](https://github.com/techbrij/multiagent-aaidc-project2/blob/main/LICENSE) file)
 
 ## Contact & Support
 
